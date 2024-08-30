@@ -3,6 +3,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "order_publisher/msg/order.hpp"
+#include "nlohmann/json.hpp"
 
 class OrderPublisher : public rclcpp::Node
 {
@@ -14,12 +15,11 @@ private:
 
     void publish_order();
 
-    int get_order_id();
-
     rclcpp::Publisher<order_publisher::msg::Order>::SharedPtr _order_publisher;
     rclcpp::TimerBase::SharedPtr _order_timer;
-    int _order_count;
 
+    nlohmann::json _orders;
+    size_t _order_count;
 };
 
 #endif

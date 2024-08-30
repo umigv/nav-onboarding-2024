@@ -1,0 +1,22 @@
+{
+    "orders": [
+        {
+            "pizza_place": "Domino's",
+            "pizza_type": "cheese",
+            "pizza_place_coord": [10, 10],
+            "customer_coord": [27, 21]
+        },
+        {
+            "pizza_place": "Jet's",
+            "pizza_type": "pepperoni",
+            "pizza_place_coord": [0, 5],
+            "customer_coord": [9, 12]
+        },
+        {
+            "pizza_place": "NYPD",
+            "pizza_type": "supreme",
+            "pizza_place_coord": [5, 15],
+            "customer_coord": [2, 8]
+        }
+    ]
+}

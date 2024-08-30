@@ -3,7 +3,10 @@
 #include <chrono>
 #include <memory>
 #include <iostream>
+#include <fstream>
+#include <string>
 
+using json = nlohmann::json;
 using namespace std::chrono_literals;
 
 OrderPublisher::OrderPublisher()
@@ -12,21 +15,54 @@ OrderPublisher::OrderPublisher()
 {
     _order_publisher = create_publisher<order_publisher::msg::Order>("orders", 10);
     _order_timer = create_wall_timer(1s, 
-    std::bind(&OrderPublisher::publish_order, 
-    this));
+        std::bind(&OrderPublisher::publish_order, 
+        this));
+
+    declare_parameter("orders_path", "orders.json");
+    declare_parameter("repeat_orders", true);
+
+    // Open and parse orders json file only once
+    std::ifstream orders_file(get_parameter("orders_path").as_string());
+    json orders_json = json::parse(orders_file);
+    _orders = orders_json["orders"];
 }
 
 void OrderPublisher::publish_order()
 {
-    std::cout << "Hello from publish_order\n";
+    if (_order_count >= _orders.size())
+    {
+        bool repeat_orders = get_parameter("repeat_orders").as_bool();
+        if (repeat_orders)
+        {
+            _order_count = 0;
+        }
+        else
+        {
+            RCLCPP_INFO(get_logger(),
+                "All orders published\n");
+            _order_timer->cancel();
+            return;
+        }
+    }
+    
+    json order = _orders[_order_count];
 
+    RCLCPP_INFO(get_logger(),
+        "Pizza place: %s",
+        order["pizza_place"].template get<std::string>().c_str());
+    
     order_publisher::msg::Order order_message;
-    order_message.order_id = get_order_id();
-}
+    order_message.order_id = _order_count;
+    order_message.pizza_place = order["pizza_place"].template get<std::string>();
+    order_message.pizza_type = order["pizza_type"].template get<std::string>();
+    order_publisher::msg::Coord pizza_place_coord, customer_coord;
+    pizza_place_coord.x = order["pizza_place_coord"][0];
+    pizza_place_coord.y = order["pizza_place_coord"][1];
+    customer_coord.x = order["customer_coord"][0];
+    customer_coord.y = order["customer_coord"][1];
+    order_message.pizza_place_coord = pizza_place_coord;
+    order_message.customer_coord = customer_coord;
 
-int OrderPublisher::get_order_id()
-{
-    int order_id = _order_count;
-    _order_count++;
-    return order_id;
+    _order_publisher->publish(order_message);
+    ++_order_count;
 }
