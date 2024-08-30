@@ -1,0 +1,5 @@
+int64 order_id
+string pizza_place
+string pizza_type
+Coord pizza_place_coord
+Coord customer_coord
