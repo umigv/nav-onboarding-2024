@@ -13,7 +13,7 @@ OrderPublisher::OrderPublisher()
     : Node("order_publisher_node"),
     _order_count(0)
 {
-    _order_publisher = create_publisher<order_publisher::msg::Order>("orders", 10);
+    _order_publisher = create_publisher<pizza_bot_infrastructure::msg::Order>("orders", 10);
     _order_timer = create_wall_timer(1s, 
         std::bind(&OrderPublisher::publish_order, 
         this));
@@ -51,15 +51,17 @@ void OrderPublisher::publish_order()
         "Pizza place: %s",
         order["pizza_place"].template get<std::string>().c_str());
     
-    order_publisher::msg::Order order_message;
+    pizza_bot_infrastructure::msg::Order order_message;
     order_message.order_id = _order_count;
     order_message.pizza_place = order["pizza_place"].template get<std::string>();
     order_message.pizza_type = order["pizza_type"].template get<std::string>();
-    order_publisher::msg::Coord pizza_place_coord, customer_coord;
+
+    pizza_bot_infrastructure::msg::Coord pizza_place_coord, customer_coord;
     pizza_place_coord.x = order["pizza_place_coord"][0];
     pizza_place_coord.y = order["pizza_place_coord"][1];
     customer_coord.x = order["customer_coord"][0];
     customer_coord.y = order["customer_coord"][1];
+
     order_message.pizza_place_coord = pizza_place_coord;
     order_message.customer_coord = customer_coord;
 

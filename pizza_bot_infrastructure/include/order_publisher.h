@@ -2,7 +2,7 @@
 #define ORDER_PUBLISHER_H
 
 #include "rclcpp/rclcpp.hpp"
-#include "order_publisher/msg/order.hpp"
+#include "pizza_bot_infrastructure/msg/order.hpp"
 #include "nlohmann/json.hpp"
 
 class OrderPublisher : public rclcpp::Node
@@ -15,7 +15,7 @@ private:
 
     void publish_order();
 
-    rclcpp::Publisher<order_publisher::msg::Order>::SharedPtr _order_publisher;
+    rclcpp::Publisher<pizza_bot_infrastructure::msg::Order>::SharedPtr _order_publisher;
     rclcpp::TimerBase::SharedPtr _order_timer;
 
     nlohmann::json _orders;

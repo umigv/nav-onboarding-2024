@@ -1,4 +1,0 @@
-order_publisher_node:
-  ros__parameters:
-    orders_path: "/home/arvuser/arv-ws/src/nav-onboarding-2024/order_publisher/orders.json"
-    repeat_orders: false
