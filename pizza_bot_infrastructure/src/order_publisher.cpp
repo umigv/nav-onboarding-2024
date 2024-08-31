@@ -46,10 +46,6 @@ void OrderPublisher::publish_order()
     }
     
     json order = _orders[_order_count];
-
-    RCLCPP_INFO(get_logger(),
-        "Pizza place: %s",
-        order["pizza_place"].template get<std::string>().c_str());
     
     pizza_bot_interfaces::msg::Order order_message;
     order_message.order_id = _order_count;
