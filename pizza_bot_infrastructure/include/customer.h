@@ -12,9 +12,9 @@ public:
 
 private:
 
-    // received_order_callback(pizza_bot_infrastructure::msg::Order::SharedPtr received_order);
+    void received_order_callback(pizza_bot_interfaces::msg::Order::SharedPtr received_order);
 
-    // rclcpp::Subscription<pizza_bot_infrastructure::msg::Order>::SharedPtr _received_order_subscriber;
+    rclcpp::Subscription<pizza_bot_interfaces::msg::Order>::SharedPtr _received_order_subscriber;
 };
 
 #endif

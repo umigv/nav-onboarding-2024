@@ -1,4 +1,0 @@
-order_publisher_node:
-  ros__parameters:
-    orders_path: "/home/arvuser/arv-ws/src/nav-onboarding-2024/pizza_bot_infrastructure/orders.json"
-    repeat_orders: true

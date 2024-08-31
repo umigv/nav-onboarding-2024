@@ -50,8 +50,13 @@ install(
 )
 
 install(
-  DIRECTORY include/
-  DESTINATION include
+  DIRECTORY config
+  DESTINATION share/${PROJECT_NAME}
+)
+
+install(
+  DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)
