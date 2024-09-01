@@ -14,6 +14,7 @@ rosidl_generate_interfaces(
   ${PROJECT_NAME}
   "msg/Order.msg"
   "msg/Coord.msg"
+  "srv/NavigateToCoord.srv"
 )
 
 if(BUILD_TESTING)

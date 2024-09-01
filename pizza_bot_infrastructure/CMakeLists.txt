@@ -36,6 +36,27 @@ ament_target_dependencies(
   pizza_bot_interfaces
 )
 
+add_executable(
+  navigator_node
+  src/run_navigator.cpp
+  src/navigator.cpp
+)
+ament_target_dependencies(
+  navigator_node
+  rclcpp
+  pizza_bot_interfaces
+)
+
+add_executable(
+  restaurant_node
+  src/run_restaurant.cpp
+  src/restaurant.cpp
+)
+ament_target_dependencies(
+  restaurant_node
+  rclcpp
+)
+
 target_link_libraries(
   order_publisher_node 
   "${cpp_typesupport_target}"
@@ -46,6 +67,8 @@ install(
   TARGETS
   order_publisher_node
   customer_node
+  navigator_node
+  restaurant_node
   DESTINATION lib/${PROJECT_NAME}
 )
 

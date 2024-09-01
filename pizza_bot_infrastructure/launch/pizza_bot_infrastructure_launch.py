@@ -3,7 +3,7 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 
-# Launchs order_publisher_node and customer_node from pizza_bot_infrastructure package
+# Launches necessary nodes from pizza_bot_infrastructure package
 # order_publisher parameters are stored in config/order_publisher_params.yaml
 
 def generate_launch_description():
@@ -20,8 +20,13 @@ def generate_launch_description():
     customer_node = Node(package = 'pizza_bot_infrastructure',
         name = 'customer_node',
         executable = 'customer_node')
+
+    navigator_node = Node(package = 'pizza_bot_infrastructure',
+        name = 'navigator_node',
+        executable = 'navigator_node')
     
     nodes = [order_publisher_node,
-        customer_node]
+        customer_node,
+        navigator_node]
 
     return LaunchDescription(nodes)
