@@ -9,6 +9,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(pizza_bot_interfaces REQUIRED)
+find_package(rclcpp_action REQUIRED)
 
 include_directories(include)
 
@@ -21,6 +22,7 @@ ament_target_dependencies(
   pizza_bot_controller_node
   rclcpp
   pizza_bot_interfaces
+  rclcpp_action
 )
 
 install(
