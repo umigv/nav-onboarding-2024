@@ -20,6 +20,7 @@ private:
 
     nlohmann::json _orders;
     size_t _order_count;
+    bool _first_order;
 };
 
 #endif

@@ -2,4 +2,4 @@ order_publisher_node:
   ros__parameters:
     orders_path: "/home/arvuser/arv-ws/src/nav-onboarding-2024/pizza_bot_infrastructure/config/orders.json"
     repeat_orders: false
-    order_delay_seconds: 5
+    order_delay_seconds: 20

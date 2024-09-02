@@ -7,6 +7,8 @@ using namespace std::chrono_literals;
 Navigator::Navigator()
     : Node("navigator_node")
 {
+    declare_parameter("navigation_delay_seconds", 2);
+
     _navigate_service = create_service<pizza_bot_interfaces::srv::NavigateToCoord>("navigate_to_coord", 
         std::bind(&Navigator::navigate_to_coord, 
             this, 
@@ -21,6 +23,10 @@ void Navigator::navigate_to_coord(const std::shared_ptr<pizza_bot_interfaces::sr
         "Received request to navigate to (%ld, %ld)",
         request->goal.x,
         request->goal.y);
+
+    int navigation_delay = get_parameter("navigation_delay_seconds").as_int();
+    rclcpp::sleep_for(std::chrono::seconds(navigation_delay));
+
     response->success = true;
     RCLCPP_INFO(get_logger(),
         "Navigation successful");

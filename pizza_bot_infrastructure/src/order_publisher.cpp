@@ -11,15 +11,18 @@ using namespace std::chrono_literals;
 
 OrderPublisher::OrderPublisher()
     : Node("order_publisher_node"),
-    _order_count(0)
+    _order_count(0),
+    _first_order(true)
 {
     declare_parameter("orders_path", "orders.json");
     declare_parameter("repeat_orders", true);
     declare_parameter("order_delay_seconds", 5);
 
     _order_publisher = create_publisher<pizza_bot_interfaces::msg::Order>("orders", 10);
-    int order_delay = get_parameter("order_delay_seconds").as_int();
-    _order_timer = create_wall_timer(std::chrono::seconds(order_delay), 
+    
+    // Want first order to be published quickly, then introduce longer delay 
+    // between subsequent orders
+    _order_timer = create_wall_timer(1s, 
         std::bind(&OrderPublisher::publish_order, this));
 
     // Open and parse orders json file only once
@@ -45,6 +48,15 @@ void OrderPublisher::publish_order()
             return;
         }
     }
+
+    if (_first_order)
+    {
+        // After first order, introduce delay
+        _first_order = false;
+        int order_delay = get_parameter("order_delay_seconds").as_int();
+        _order_timer = create_wall_timer(std::chrono::seconds(order_delay), 
+            std::bind(&OrderPublisher::publish_order, this));
+    }
     
     json order = _orders[_order_count];
     
@@ -62,6 +74,8 @@ void OrderPublisher::publish_order()
     order_message.pizza_place_coord = pizza_place_coord;
     order_message.customer_coord = customer_coord;
 
+    RCLCPP_INFO(get_logger(),
+        "Publishing order");
     _order_publisher->publish(order_message);
     ++_order_count;
 }
