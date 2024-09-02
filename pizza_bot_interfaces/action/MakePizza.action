@@ -1,0 +1,5 @@
+string pizza_type # Request
+---
+bool pizza_finished # Result
+---
+string pizza_status # Feedback

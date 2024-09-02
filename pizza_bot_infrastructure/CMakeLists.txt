@@ -10,6 +10,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(nlohmann_json 3.10.5 REQUIRED)
 find_package(pizza_bot_interfaces REQUIRED)
+find_package(rclcpp_action REQUIRED)
 
 # find header files in include
 include_directories(include)
@@ -55,6 +56,8 @@ add_executable(
 ament_target_dependencies(
   restaurant_node
   rclcpp
+  rclcpp_action
+  pizza_bot_interfaces
 )
 
 target_link_libraries(

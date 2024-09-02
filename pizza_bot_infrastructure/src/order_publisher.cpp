@@ -13,13 +13,14 @@ OrderPublisher::OrderPublisher()
     : Node("order_publisher_node"),
     _order_count(0)
 {
-    _order_publisher = create_publisher<pizza_bot_interfaces::msg::Order>("orders", 10);
-    _order_timer = create_wall_timer(1s, 
-        std::bind(&OrderPublisher::publish_order, 
-        this));
-
     declare_parameter("orders_path", "orders.json");
     declare_parameter("repeat_orders", true);
+    declare_parameter("order_delay_seconds", 5);
+
+    _order_publisher = create_publisher<pizza_bot_interfaces::msg::Order>("orders", 10);
+    int order_delay = get_parameter("order_delay_seconds").as_int();
+    _order_timer = create_wall_timer(std::chrono::seconds(order_delay), 
+        std::bind(&OrderPublisher::publish_order, this));
 
     // Open and parse orders json file only once
     std::ifstream orders_file(get_parameter("orders_path").as_string());

@@ -22,6 +22,8 @@ PizzaBotController::PizzaBotController()
 
 void PizzaBotController::order_callback(pizza_bot_interfaces::msg::Order::SharedPtr order)
 {
+    RCLCPP_INFO(get_logger(),
+        "Publishing received order");
     _received_order_publisher->publish(*order);
     call_navigate_service(order->pizza_place_coord,
         std::bind(&PizzaBotController::pizza_place_navigation_callback,

@@ -15,6 +15,7 @@ rosidl_generate_interfaces(
   "msg/Order.msg"
   "msg/Coord.msg"
   "srv/NavigateToCoord.srv"
+  "action/MakePizza.action"
 )
 
 if(BUILD_TESTING)
