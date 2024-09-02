@@ -43,7 +43,7 @@ void OrderPublisher::publish_order()
         else
         {
             RCLCPP_INFO(get_logger(),
-                "All orders published\n");
+                "---------- All orders published ----------");
             _order_timer->cancel();
             return;
         }
@@ -75,7 +75,7 @@ void OrderPublisher::publish_order()
     order_message.customer_coord = customer_coord;
 
     RCLCPP_INFO(get_logger(),
-        "Publishing order");
+        "---------- Publishing order ----------");
     _order_publisher->publish(order_message);
     ++_order_count;
 }

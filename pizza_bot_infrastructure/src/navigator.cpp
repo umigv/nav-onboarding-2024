@@ -3,21 +3,23 @@
 #include <chrono>
 
 using namespace std::chrono_literals;
+using namespace std::placeholders;
+using NavigateToCoord = pizza_bot_interfaces::srv::NavigateToCoord;
 
 Navigator::Navigator()
     : Node("navigator_node")
 {
     declare_parameter("navigation_delay_seconds", 2);
 
-    _navigate_service = create_service<pizza_bot_interfaces::srv::NavigateToCoord>("navigate_to_coord", 
+    _navigate_service = create_service<NavigateToCoord>("navigate_to_coord", 
         std::bind(&Navigator::navigate_to_coord, 
             this, 
-            std::placeholders::_1, 
-            std::placeholders::_2));
+            _1, 
+            _2));
 }
 
-void Navigator::navigate_to_coord(const std::shared_ptr<pizza_bot_interfaces::srv::NavigateToCoord::Request> request,
-        std::shared_ptr<pizza_bot_interfaces::srv::NavigateToCoord::Response> response)
+void Navigator::navigate_to_coord(const std::shared_ptr<NavigateToCoord::Request> request,
+        std::shared_ptr<NavigateToCoord::Response> response)
 {
     RCLCPP_INFO(get_logger(),
         "Received request to navigate to (%ld, %ld)",

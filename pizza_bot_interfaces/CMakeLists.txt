@@ -15,6 +15,7 @@ rosidl_generate_interfaces(
   "msg/Order.msg"
   "msg/Coord.msg"
   "srv/NavigateToCoord.srv"
+  "srv/DeliverPizza.srv"
   "action/MakePizza.action"
 )
 

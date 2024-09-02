@@ -49,9 +49,6 @@ void Restaurant::make_pizza(const std::shared_ptr<MakePizzaGoalHandle> goal_hand
 {
     const auto goal = goal_handle->get_goal();
     std::string pizza_type = goal->pizza_type;
-    RCLCPP_INFO(get_logger(),
-        "Received order for %s pizza",
-        pizza_type.c_str());
 
     auto feedback = std::make_shared<MakePizza::Feedback>();
     feedback->pizza_status = pizza_type + " pizza in progress";

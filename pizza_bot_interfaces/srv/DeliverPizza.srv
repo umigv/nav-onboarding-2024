@@ -1,0 +1,3 @@
+string pizza_type # Request
+---
+bool success # Response

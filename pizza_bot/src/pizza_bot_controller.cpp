@@ -6,28 +6,34 @@
 
 using namespace std::chrono_literals;
 using namespace std::placeholders;
-using NavigateToCoordSharedFuture = rclcpp::Client<pizza_bot_interfaces::srv::NavigateToCoord>::SharedFuture;
+using Order = pizza_bot_interfaces::msg::Order;
+using Coord = pizza_bot_interfaces::msg::Coord;
+using NavigateToCoord = pizza_bot_interfaces::srv::NavigateToCoord;
+using NavigateToCoordSharedFuture = rclcpp::Client<NavigateToCoord>::SharedFuture;
 using MakePizza = pizza_bot_interfaces::action::MakePizza;
 using MakePizzaGoalHandle = rclcpp_action::ClientGoalHandle<MakePizza>;
+using DeliverPizza = pizza_bot_interfaces::srv::DeliverPizza;
+using DeliverPizzaSharedFuture = rclcpp::Client<DeliverPizza>::SharedFuture;
 
 PizzaBotController::PizzaBotController()
     : Node("pizza_bot_controller_node")
 {
-    _order_subscriber = create_subscription<pizza_bot_interfaces::msg::Order>("orders", 
+    _order_subscriber = create_subscription<Order>("orders", 
         10, 
         std::bind(&PizzaBotController::order_callback, 
             this, 
             _1));
 
-    _received_order_publisher = create_publisher<pizza_bot_interfaces::msg::Order>("received_orders", 10);
-    _navigate_client = create_client<pizza_bot_interfaces::srv::NavigateToCoord>("navigate_to_coord");
+    _received_order_publisher = create_publisher<Order>("received_orders", 10);
+    _navigate_client = create_client<NavigateToCoord>("navigate_to_coord");
     _make_pizza_client = rclcpp_action::create_client<MakePizza>(this, "make_pizza");
+    _deliver_pizza_client = create_client<DeliverPizza>("deliver_pizza");
 }
 
-void PizzaBotController::order_callback(pizza_bot_interfaces::msg::Order::SharedPtr order)
+void PizzaBotController::order_callback(Order::SharedPtr order)
 {
     RCLCPP_INFO(get_logger(),
-        "Publishing received order");
+        "---------- Publishing received order ----------");
     _received_order_publisher->publish(*order);
     call_navigate_service(order->pizza_place_coord,
         std::bind(&PizzaBotController::pizza_place_navigation_callback,
@@ -36,7 +42,7 @@ void PizzaBotController::order_callback(pizza_bot_interfaces::msg::Order::Shared
             order));
 }
 
-void PizzaBotController::call_navigate_service(const pizza_bot_interfaces::msg::Coord &goal,
+void PizzaBotController::call_navigate_service(const Coord &goal,
     std::function<void(NavigateToCoordSharedFuture)> response_callback)
 {
     while (!_navigate_client->wait_for_service(1s)) 
@@ -45,17 +51,17 @@ void PizzaBotController::call_navigate_service(const pizza_bot_interfaces::msg::
             "navigate_to_coord service not available, waiting again...");
 	}
 
-    auto goal_request = std::make_shared<pizza_bot_interfaces::srv::NavigateToCoord::Request>();
+    auto goal_request = std::make_shared<NavigateToCoord::Request>();
     goal_request->goal = goal;
 
-    auto result = _navigate_client->async_send_request(goal_request, response_callback);
+    _navigate_client->async_send_request(goal_request, response_callback);
 }
 
 void PizzaBotController::pizza_place_navigation_callback(NavigateToCoordSharedFuture future,
-    const pizza_bot_interfaces::msg::Order::SharedPtr order)
+    const Order::SharedPtr order)
 {
     bool navigation_succeeded = future.get()->success;
-    pizza_bot_interfaces::msg::Coord pizza_place_coord = order->pizza_place_coord;
+    Coord pizza_place_coord = order->pizza_place_coord;
     std::string pizza_place_name = order->pizza_place;
     if (!navigation_succeeded)
     {
@@ -76,7 +82,7 @@ void PizzaBotController::pizza_place_navigation_callback(NavigateToCoordSharedFu
     send_pizza_order(order);
 }
 
-void PizzaBotController::send_pizza_order(const pizza_bot_interfaces::msg::Order::SharedPtr order)
+void PizzaBotController::send_pizza_order(const Order::SharedPtr order)
 {
     while (!_make_pizza_client->wait_for_action_server(1s))
     {
@@ -127,7 +133,7 @@ void PizzaBotController::feedback_callback(std::shared_ptr<MakePizzaGoalHandle> 
 }
 
 void PizzaBotController::result_callback(const MakePizzaGoalHandle::WrappedResult &result,
-    const pizza_bot_interfaces::msg::Order::SharedPtr order)
+    const Order::SharedPtr order)
 {
     switch (result.code)
     {
@@ -167,5 +173,62 @@ void PizzaBotController::result_callback(const MakePizzaGoalHandle::WrappedResul
         pizza_place.c_str(),
         pizza_type.c_str());
 
-    
+    call_navigate_service(order->customer_coord,
+        std::bind(&PizzaBotController::customer_navigation_callback,
+            this,
+            _1,
+            order));
+}
+
+void PizzaBotController::customer_navigation_callback(rclcpp::Client<NavigateToCoord>::SharedFuture future,
+    const Order::SharedPtr order)
+{
+    bool navigation_succeeded = future.get()->success;
+    Coord customer_coord = order->customer_coord;
+    if (!navigation_succeeded)
+    {
+        RCLCPP_INFO(get_logger(),
+            "Failed to navigate to customer's house at (%ld, %ld)",
+            customer_coord.x,
+            customer_coord.y);
+        return;
+    }
+
+    RCLCPP_INFO(get_logger(),
+        "Successfuly navigated to customer's house at (%ld, %ld)",
+        customer_coord.x,
+        customer_coord.y);
+
+    deliver_pizza(order->pizza_type);
+}
+
+void PizzaBotController::deliver_pizza(const std::string &pizza_type)
+{
+    while (!_deliver_pizza_client->wait_for_service(1s)) 
+	{
+	    RCLCPP_INFO(get_logger(), 
+            "deliver_pizza service not available, waiting again...");
+	}
+
+    auto delivery_request = std::make_shared<DeliverPizza::Request>();
+    delivery_request->pizza_type = pizza_type;
+
+    _deliver_pizza_client->async_send_request(delivery_request, 
+        std::bind(&PizzaBotController::pizza_delivery_callback,
+            this,
+            _1));
+}
+
+void PizzaBotController::pizza_delivery_callback(DeliverPizzaSharedFuture future)
+{
+    bool delivery_succeeded = future.get()->success;
+    if (!delivery_succeeded)
+    {
+        RCLCPP_INFO(get_logger(),
+            "Failed to complete delivery");
+        return;
+    }
+
+    RCLCPP_INFO(get_logger(),
+        "Successfuly completed delivery");
 }
