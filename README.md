@@ -7,6 +7,8 @@ Useful links:\
 [ROS Docs](https://docs.ros.org/en/humble/)\
 [C++ API](https://docs.ros2.org/latest/api/rclcpp/)
 
+<img src="https://github.com/user-attachments/assets/4280dd47-33da-4135-a332-1eac12cce632" width="300">
+
 Contrary to the name, the Robot Operating System is not an operating system at all, and while it was designed for robotics development, nothing about the core technology is exclusive for robotics. It is simply a framework that allows applications to be built in a particular way, which happens to be very useful for designing robots. Over the years, a massive ecosystem of robotics-specific libraries and tools have evolved around ROS, which is why it's so widely used today. 
 
 The building blocks of ROS applications are nodes. Each node is a separate executable and can communicate with one another in three different ways: topics, services, and actions. This onboarding project will utilize all three of these communication methods. Nodes are then organized into packages, which is the format in which ROS applications are compiled and distributed. 
@@ -16,8 +18,31 @@ ROS provides both a Python API (rclpy) and a C++ API (rclcpp), but a node's impl
 ROS is designed for the Ubuntu Operating System, a Linux distribution, so some environment setup is required before diving into programming with ROS. 
 
 ## Environment Setup
+You will be using pre-configured Ubuntu 22.04 virtual machines for your ROS environment. First, you need to download the virtualization software required to run these virtual machines, VMware Workstation Pro for Windows and VMware Fusion Pro for Mac. 
 
+### Windows Instructions
+- Download and run the installer found in the folder at the following link: https://drive.google.com/drive/u/1/folders/1B4brWb8zgHHhMUmMF9D1ZJPqDI5njiof
+- When prompted, select “Install Windows Hypervisor Platform (WHP) automatically”
+- Leave all other settings as the default
+- Download and unzip the virtual machine found in the folder at the following link: TODO: insert link here
+  - Note: the virtual machine itself will be a folder named "ARV ROS2 Humble AMD64 VM"
+- Launch the VMware Workstation Pro application
+- Select "Use VMware Workstation 17 for Personal Use"
+- Select "Open a Virtual Machine"
+- In the file explorer, navigate inside the unzipped virtual machine folder you downloaded and select the "VMware virtual machine configuration" file found inside
+- This will open the pre-configured virtual machine, where a ROS workspace is already installed and ready to go
+- The password to login is "arv123"
 
+### Mac Instructions
+- Download and run the installer found in the folder at the following link: https://drive.google.com/drive/u/1/folders/17qI6loxY2wwvchc0UcinaLhVEvrYvMe1
+- Download and unzip the virtual machine found in the folder at the following link: TODO: insert link here
+- Launch the VMware Fusion Pro application
+- When prompted for a license key, select "I want to license VMware Fusion 13 Pro for Personal Use"
+- In the upper menu, select File->Open and Run, and select the virtual machine you downloaded
+- This will open the pre-configured virtual machine, where a ROS workspace is already installed and ready to go
+- The password to login is "arv123"
+
+And that's it for environment setup! You're ready to start the onboarding project.
 
 ## Pizza Delivery Robot
 You will be designing a pizza delivery robot control system that handles order processing, navigation, pizza pickup, and delivery. You will need to complete the following actions for each order:  
@@ -78,6 +103,21 @@ In the other, run:
 ros2 topic echo /orders
 ```
 
-The infrastructure publishes orders very slowly, because eventually a lot of stuff will be happening between each order, so after about 15 seconds, if everything is working properly, an order message should pop up in the terminal you ran `ros2 topic echo /orders`, and there should be output in the other terminal saying that an order was published. Once you confirm that the infrastructure is functioning as expected, kill the process in each terminal with Ctrl+C. Now we're ready to start writing code!
+The infrastructure publishes orders very slowly, because eventually a lot of stuff will be happening between each order, so after about 15 seconds, if everything is working properly, an order message should pop up in the terminal you ran `ros2 topic echo /orders`, and there should be output in the other terminal saying that an order was published. 
+
+Topic echo output:
+
+<img src="https://github.com/user-attachments/assets/70f5129d-66b7-46a8-b866-b27c938b5c09" width="300">
+
+Infrastructure output:
+
+<img src="https://github.com/user-attachments/assets/04c3263b-32bd-4686-b797-abb7a39703f8" width="650">
+
+Once you confirm that the infrastructure is functioning as expected, kill the process in each terminal with Ctrl+C. 
+
+Now we're ready to start writing code! Run the following command to open the pizza_bot package in VSCode:
+```bash
+code ~/arv-ws/src/nav-onboarding-2024/pizza_bot
+```
 
 ### Receiving the orders
