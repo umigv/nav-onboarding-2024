@@ -125,6 +125,74 @@ To get Intellisense to work, click on the Build button in the very bottom bar in
 Now we're ready to start writing code! 
 
 ### Receiving the orders
-ROS nodes are commonly represented in C++ as classesYou will be writing your code in 3 files:
+You will be creating a single node in this project, which will be implemented as a single C++ class called PizzaBotController. Your code will go in 3 files, each of which are already created and found in the pizza_bot package: pizza_bot_controller.h, which will include class, member function, and member variable declarations, pizza_bot_controller.cpp, which will contain member function implementations, and main.cpp, which will contain the `main` function where your node is launched. 
 
-The first task is to subscribe to a topic in order to receive the orders. Read the Background section of the following article to get a high-level understanding of topics: [ROS Topics](https://docs.ros.org/en/humble/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Topics/Understanding-ROS2-Topics.html)
+Download the ROS2_Tutorial.pdf file found in this repo. It is an excellent introduction to ROS 2 concepts written by Chris Erndteman, our current engineering director and former navigation lead. This document will be referred to as the ROS2 Tutorial from now on. To get a conceptual understanding of ROS nodes, read section 4.1 of the ROS2 Tutorial and the Background section of the following article: [ROS Nodes](https://docs.ros.org/en/humble/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Nodes/Understanding-ROS2-Nodes.html).
+
+The first task is to subscribe to a topic to receive the orders. To get a conceptual understanding of topics, read section 4.2 of the ROS2 Tutorial and the Background section of the following article: [ROS Topics](https://docs.ros.org/en/humble/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Topics/Understanding-ROS2-Topics.html)
+
+The name of the topic you need to subscribe to is "orders", and the message type is `pizza_bot_interfaces/msg/Order`. To look at what data is contained within these Order messages, you can run the following command: 
+```bash
+ros2 interface show pizza_bot_interfaces/msg/Order
+```
+
+Use the subscriber section of the following article as a reference when creating the subscriber: [ROS Publishers/Subscribers](https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Cpp-Publisher-And-Subscriber.html).
+
+Looking things up, researching, and reading documentation are perhaps the most useful skills you will need in ARV. Chat GPT can be a valuable resource as well. When you're ready to test your code, run `colcon build` (make sure to only do this in the arv_ws directory) to build your node. Make sure to run `source ~/arv_ws/install/setup.bash` in each new terminal you open and after building, or your changes won't have any effect. Run the PizzaBotController node with the following command: 
+```bash
+ros2 run pizza_bot pizza_bot_controller_node 
+```
+
+Open a new terminal window, ideally so you can see both at once, and launch the infrastructure using the same command you used before:
+```bash
+ros2 launch pizza_bot_infrastructure pizza_bot_infrastructure_launch.py
+```
+
+Remember to always run the pizza_bot_controller node before running the infrastructure to make sure your node doesn't miss any published orders. The infrastructure output won't be changed by your subscriber, so you can check that your subscriber is working by printing out the data in the Order message you receive and check that it matches the orders found in pizza_bot_infrastructure/config/orders.json. 
+
+### Notify customer
+The next task is to notify the customer that their order has been received. You will do this by publishing each order you receive to a topic called "received_orders". The message type of this topic is the same as the "orders" topic you subscribed to in the previous step, so you can publish the order exactly how you received it. 
+
+Use the publisher section of the following article as a reference when creating the publisher: [ROS Publishers/Subscribers](https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Cpp-Publisher-And-Subscriber.html). 
+
+If you're publishing the orders correctly, the infrastructure output should look like this:
+
+TODO: picture goes here
+
+### Navigate to the pizza place
+The next task is to navigate the pizza bot to the correct pizza place. You will do this by calling a service provided by the infrastructure called "navigate_to_coord". To get a conceptual understanding of services, read section 4.3 of the ROS2 Tutorial and the Background section of the following article: [ROS Services](https://docs.ros.org/en/humble/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Services/Understanding-ROS2-Services.html).
+
+To look at the request and response types of the "navigate_to_coord" service, run the following command: 
+```bash
+ros2 interface show pizza_bot_interfaces/srv/NavigateToCoord
+```
+
+Each Order you received contains a pizza_place_coord that represents the location of the pizza restaurant, which you can use as the request when calling the service. The PizzaBotController node will be serving as the service client, so use the client node section of the following article as a reference when calling the service: [ROS Service/Client](https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Cpp-Service-And-Client.html).
+
+The reference code found in the above article is all within the `main` function, so it will need to be adapted to our object-oriented approach. The client itself should be a member variable of the PizzaBotController class, and it should be created with `this->create_client()` in the constructor. 
+
+Additionally, after calling `async_send_request`, which performs the service call, instead of spinning until the service completes, which is what the reference code does, we can pass a callback function to `async_send_request` as the second argument. This works exactly how you passed a callback function to `create_subscription`. For example:
+
+```cpp
+client->async_send_request(request, std::bind(&PizzaBotController::service_callback, this, std::placeholders::_1));
+```
+
+`PizzaBotController::service_callback` will be automatically called when the service completes. The first parameter of your service callback function must have the following type:
+
+```cpp
+rclcpp::Client<pizza_bot_interfaces::srv::NavigateToCoord>::SharedFuture future;
+```
+
+Inside the callback, you can get the result of the service like so: 
+```cpp
+bool success = future.get()->success;
+```
+
+Your callback can have more parameters if needed, but these parameters must be set with `std::bind` when passing it to `async_send_request`. 
+_Hint: You may need to pass extra information about the order to your callback for future steps._
+
+If you're calling the service correctly, the infrastucture output should look like this: 
+
+TODO: insert picture here
+
+### Retrieving the pizza
