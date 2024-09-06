@@ -218,3 +218,16 @@ The next task is to navigate the pizza robot to the customer's house. You will d
 If you're navigating to the customer's house correctly, the infrastructure output should look like this: 
 
 TODO: insert picture here
+
+### Deliver the pizza
+The final task is to deliver the pizza to the customer. You will do this by calling a different service provided by the infrastructure called "deliver_pizza". To look at the data types of the "deliver_pizza" service, run the following command: 
+
+```bash
+ros2 interface show pizza_bot_interfaces/srv/DeliverPizza 
+```
+
+Use the same code structure as you did when calling the "navigate_to_coord" service. This will be the final task for each order, so after delivering the pizza to the customer, simply wait for the next order to be published and repeat the sequence. After completing this step, the final infrastructure output should look like this: 
+
+TODO: insert picture here
+
+And that's it! After completing this onboarding project, you should have a solid understanding of the basic structure of a ROS application and the three primary methods nodes use to communicate with each other. When you're finished, let a lead know and we'll start talking about what project you might want to work on!
