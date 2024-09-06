@@ -196,3 +196,25 @@ If you're calling the service correctly, the infrastucture output should look li
 TODO: insert picture here
 
 ### Retrieving the pizza
+The next task is ordering and retrieving the pizza from the restaurant. You will do this by calling an action provided by the infrastructure called "make_pizza". To get a conceptual understanding of actions, read section 4.5 of the ROS2 Tutorial and the Background section of the following article: [ROS Actions](https://docs.ros.org/en/humble/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Actions/Understanding-ROS2-Actions.html).
+
+To look at the data types of the "make_pizza" action, run the following command: 
+
+```bash
+ros2 interface show pizza_bot_interfaces/action/MakePizza
+```
+
+Use the action client node section of the following article as a reference when calling the action: [ROS Action Server/Client](https://docs.ros.org/en/humble/Tutorials/Intermediate/Writing-an-Action-Server-Client/Cpp.html#writing-an-action-client). The reference code here takes an object-oriented approach, so you can follow it more closely than you did for the service client node example. 
+
+The feedback of the "make_pizza" action doesn't have a functional purpose, but you can print it to make sure that your feedback callback is working correctly. 
+
+If you're calling the action correctly for each order, the infrastructure output should look like this:
+
+TODO: insert picture here
+
+### Navigate to the customer's house
+The next task is to navigate the pizza robot to the customer's house. You will do this with the same service you used to navigate to the pizza place, "navigate_to_coord", which means you can use the same client object you created a couple steps ago. Try to reuse as much code as possible from when you last called the service. Each Order contains a customer_coord that has the coordinates of the customer's house. 
+
+If you're navigating to the customer's house correctly, the infrastructure output should look like this: 
+
+TODO: insert picture here
