@@ -67,7 +67,7 @@ In ROS terms:
 To begin, open a terminal window from the sidebar on the left, navigate to the workspace src directory, and clone this repo:
 ``` bash
 cd ~/arv_ws/src
-git clone https://github.com/johnr282/nav-onboarding-2024 ### TODO: Update this link once repo is moved into umigv
+git clone https://github.com/umigv/nav-onboarding-2024
 ```
 
 If you look in your src directory, you will see three packages: pizza_bot, pizza_bot_infrastructure, and pizza_bot_interfaces. All of the code you will be writing will go in the pizza_bot package. Do not edit any files in the pizza_bot_infrastructure or pizza_bot_interfaces packages, but feel free to look inside them if you're curious. 
