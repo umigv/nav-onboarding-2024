@@ -212,7 +212,7 @@ The feedback of the "make_pizza" action doesn't have a functional purpose, but y
 
 If you're calling the action correctly for each order, the infrastructure output should look like this:
 
-<img src="https://github.com/umigv/nav-onboarding-2024/blob/main/images/Deliver%20pizza%20output.png" width="800">
+<img src="https://github.com/umigv/nav-onboarding-2024/blob/main/images/Order%20pizza%20output.png" width="800">
 
 ### Navigate to the customer's house
 The next task is to navigate the pizza robot to the customer's house. You will do this with the same service you used to navigate to the pizza place, "navigate_to_coord", which means you can use the same client object you created a couple steps ago. Try to reuse as much code as possible from when you last called the service. Each Order contains a customer_coord that has the coordinates of the customer's house. 
