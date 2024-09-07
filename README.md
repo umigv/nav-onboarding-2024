@@ -21,10 +21,10 @@ ROS is designed for the Ubuntu Operating System, a Linux distribution, so some e
 You will be using pre-configured Ubuntu 22.04 virtual machines for your ROS environment. First, you need to download the virtualization software required to run these virtual machines, VMware Workstation Pro for Windows and VMware Fusion Pro for Mac. 
 
 ### Windows Instructions
-- Download and run the installer found in the folder at the following link: https://drive.google.com/drive/u/1/folders/1B4brWb8zgHHhMUmMF9D1ZJPqDI5njiof
+- Download and run the installer found in the folder at the following link: [Workstation Pro Installer](https://drive.google.com/drive/u/1/folders/1B4brWb8zgHHhMUmMF9D1ZJPqDI5njiof)
 - When prompted, select “Install Windows Hypervisor Platform (WHP) automatically”
 - Leave all other settings as the default
-- Download and unzip the virtual machine found in the folder at the following link: https://drive.google.com/drive/u/1/folders/1MHMFtIlwFGJZG5i-9k_x_0I_77PrtI__
+- Download and unzip the virtual machine found in the folder at the following link: [Virtual Machine](https://drive.google.com/drive/u/1/folders/1MHMFtIlwFGJZG5i-9k_x_0I_77PrtI__)
   - Note: the virtual machine itself will be a folder named "ARV ROS2 Humble AMD64 VM"
 - Launch the VMware Workstation Pro application
 - Select "Use VMware Workstation 17 for Personal Use"
@@ -34,8 +34,8 @@ You will be using pre-configured Ubuntu 22.04 virtual machines for your ROS envi
 - The password to login is "arv123"
 
 ### Mac Instructions
-- Download and run the installer found in the folder at the following link: https://drive.google.com/drive/u/1/folders/17qI6loxY2wwvchc0UcinaLhVEvrYvMe1
-- Download and unzip the virtual machine found in the folder at the following link: https://drive.google.com/drive/u/1/folders/1AtrTcFdAR8XJhJ1agBp9nuoueDqO_DnV
+- Download and run the installer found in the folder at the following link: [Fusion Pro Installer](https://drive.google.com/drive/u/1/folders/17qI6loxY2wwvchc0UcinaLhVEvrYvMe1)
+- Download and unzip the virtual machine found in the folder at the following link: [Virtual Machine](https://drive.google.com/drive/u/1/folders/1AtrTcFdAR8XJhJ1agBp9nuoueDqO_DnV)
 - Launch the VMware Fusion Pro application
 - When prompted for a license key, select "I want to license VMware Fusion 13 Pro for Personal Use"
 - In the upper menu, select File->Open and Run, and select the virtual machine you downloaded
@@ -219,7 +219,7 @@ The next task is to navigate the pizza robot to the customer's house. You will d
 
 If you're navigating to the customer's house correctly, the infrastructure output should look like this: 
 
-TODO: insert picture here
+<img src="https://github.com/user-attachments/assets/14228124-92b0-4250-906e-50c412c4c8ad" width="800">
 
 ### Deliver the pizza
 The final task is to deliver the pizza to the customer. You will do this by calling a different service provided by the infrastructure called "deliver_pizza". To look at the data types of the "deliver_pizza" service, run the following command: 
@@ -230,6 +230,6 @@ ros2 interface show pizza_bot_interfaces/srv/DeliverPizza
 
 Use the same code structure as you did when calling the "navigate_to_coord" service. This will be the final task for each order, so after delivering the pizza to the customer, simply wait for the next order to be published and repeat the sequence. After completing this step, the final infrastructure output should look like this: 
 
-TODO: insert picture here
+<img src="https://github.com/user-attachments/assets/ee2a1627-35e6-41fe-9953-bad55c29ce4a" width="800">
 
 And that's it! After completing this onboarding project, you should have a solid understanding of the basic structure of a ROS application and the three primary methods nodes use to communicate with each other. When you're finished, let a lead know and we'll start talking about what project you might want to work on!
