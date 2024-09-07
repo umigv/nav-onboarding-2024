@@ -1,3 +1,5 @@
-Coord goal # Request
+# Request
+Coord goal 
 ---
-bool success # Response
+# Response
+bool success
