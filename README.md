@@ -22,10 +22,11 @@ You will be using pre-configured Ubuntu 22.04 virtual machines for your ROS envi
 
 ### Windows Instructions
 - Download and run the installer found in the folder at the following link: [Workstation Pro Installer](https://drive.google.com/drive/u/1/folders/1B4brWb8zgHHhMUmMF9D1ZJPqDI5njiof)
+    - Note: if you get the error "Can't scan for viruses", thats normal in this case, just press "Download anyway"
 - When prompted, select “Install Windows Hypervisor Platform (WHP) automatically”
 - Leave all other settings as the default
 - Download and unzip the virtual machine found in the folder at the following link: [Virtual Machine](https://drive.google.com/drive/u/1/folders/1MHMFtIlwFGJZG5i-9k_x_0I_77PrtI__)
-  - Note: the virtual machine itself will be a folder named "ARV ROS2 Humble AMD64 VM"
+  - Note: the virtual machine itself will be a folder named "ARV ROS2 Humble AMD64 VM", this will take a while to download, so please be patient
 - Launch the VMware Workstation Pro application
 - Select "Use VMware Workstation 17 for Personal Use"
 - Select "Open a Virtual Machine"
