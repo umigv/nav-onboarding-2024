@@ -8,6 +8,7 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(pizza_bot_interfaces REQUIRED)  # Add this line to find your message package
 
 include_directories(include)
 
@@ -16,9 +17,11 @@ add_executable(
   src/main.cpp
   src/pizza_bot_controller.cpp
 )
+
 ament_target_dependencies(
   pizza_bot_controller_node
   rclcpp
+  pizza_bot_interfaces  # Add this to link the custom message type
 )
 
 install(
