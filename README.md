@@ -103,12 +103,12 @@ Note: It is advised to not run `source install/setup.bash` in the same terminal 
 
 Run `source install/setup.bash` in each of the two terminal windows you opened. We will now be able to run the infrastructure code we just built. In one terminal, run:
 ```bash
-ros2 launch pizza_bot_infrastructure pizza_bot_infrastructure_launch.py
+ros2 topic echo /orders
 ```
 
 In the other, run:
 ```bash
-ros2 topic echo /orders
+ros2 launch pizza_bot_infrastructure pizza_bot_infrastructure_launch.py
 ```
 
 The infrastructure publishes orders very slowly, because eventually a lot of stuff will be happening between each order, so after about 15 seconds, if everything is working properly, an order message should pop up in the terminal you ran `ros2 topic echo /orders`, and there should be output in the other terminal saying that an order was published. 
