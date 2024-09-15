@@ -66,7 +66,7 @@ void PizzaBotController::navigate_to_coord(pizza_bot_interfaces::msg::Order::Sha
 void PizzaBotController::deliver_pizza(pizza_bot_interfaces::msg::Order::SharedPtr ord)
 {
 
-    RCLCPP_INFO(this->get_logger(), "Delivering");
+    RCLCPP_INFO(this->get_logger(), "Delivering Pizza");
 
     auto request = std::make_shared<pizza_bot_interfaces::srv::DeliverPizza::Request>();
     std::string pizza;
