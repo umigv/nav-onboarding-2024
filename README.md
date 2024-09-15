@@ -67,7 +67,7 @@ In ROS terms:
 ### Initial Setup
 To begin, open a terminal window from the sidebar on the left, navigate to the workspace src directory, and clone this repo:
 ``` bash
-cd ~/arv_ws/src
+cd ~/arv-ws/src
 git clone https://github.com/umigv/nav-onboarding-2024
 ```
 
@@ -82,18 +82,18 @@ If you look in your src directory, you will see three packages: pizza_bot, pizza
 
 Now, open another terminal tab, navigate back to the workspace directory, and build the code you just cloned:
 ``` bash
-cd ~/arv_ws
+cd ~/arv-ws
 colcon build
 ```
 
 Colcon is the ROS build tool used to compile all of the packages in the src directory. 
 
-Now we need to make sure that the infrastructure is working properly. Open another terminal tab and a separate terminal window so two terminal windows are visible at once (get used to opening lots and lots of terminal windows/tabs). Make sure you're in the workspace directory (~/arv_ws) in each new terminal. 
+Now we need to make sure that the infrastructure is working properly. Open another terminal tab and a separate terminal window so two terminal windows are visible at once (get used to opening lots and lots of terminal windows/tabs). Make sure you're in the workspace directory (~/arv-ws) in each new terminal. 
 
 **_Important: After opening a new terminal or after running `colcon build`, you need to run the following command to sync your workspace with the underlying ROS installation:_**
 ```bash
-source ~/arv_ws/install/setup.bash
-# If you're already in the arv_ws directory, you can simply run:
+source ~/arv-ws/install/setup.bash
+# If you're already in the arv-ws directory, you can simply run:
 source install/setup.bash
 ```
 
@@ -146,7 +146,7 @@ ros2 interface show pizza_bot_interfaces/msg/Order
 
 Use the subscriber section of the following article as a reference when creating the subscriber: [ROS Publishers/Subscribers](https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Cpp-Publisher-And-Subscriber.html).
 
-Looking things up, researching, and reading documentation are perhaps the most useful skills you will need in ARV. Chat GPT can be a valuable resource as well. When you're ready to test your code, run `colcon build` (make sure to only do this in the arv_ws directory) to build your node. Make sure to run `source ~/arv_ws/install/setup.bash` in each new terminal you open and after building, or your changes won't have any effect. Run the PizzaBotController node with the following command: 
+Looking things up, researching, and reading documentation are perhaps the most useful skills you will need in ARV. Chat GPT can be a valuable resource as well. When you're ready to test your code, run `colcon build` (make sure to only do this in the arv-ws directory) to build your node. Make sure to run `source ~/arv-ws/install/setup.bash` in each new terminal you open and after building, or your changes won't have any effect. Run the PizzaBotController node with the following command: 
 ```bash
 ros2 run pizza_bot pizza_bot_controller_node 
 ```
