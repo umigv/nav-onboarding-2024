@@ -71,6 +71,13 @@ cd ~/arv_ws/src
 git clone https://github.com/umigv/nav-onboarding-2024
 ```
 
+Next, setup your git config as below, subbing in "Your Name" and "Your Email" with your info, (keep the quotes).
+Use the email associated with your github account, if you have one, otherwise use whatever
+``` bash
+git config --global user.email "Your Email"
+git config --global user.name "Your Name"
+```
+
 If you look in your src directory, you will see three packages: pizza_bot, pizza_bot_infrastructure, and pizza_bot_interfaces. All of the code you will be writing will go in the pizza_bot package. Do not edit any files in the pizza_bot_infrastructure or pizza_bot_interfaces packages, but feel free to look inside them if you're curious. 
 
 Now, open another terminal tab, navigate back to the workspace directory, and build the code you just cloned:
