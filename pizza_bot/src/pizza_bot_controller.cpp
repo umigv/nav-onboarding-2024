@@ -21,7 +21,7 @@ PizzaBotController::PizzaBotController ()
 
 void PizzaBotController::order_callback(const pizza_bot_interfaces::msg::Order::SharedPtr msg)
 {
-        RCLCPP_INFO(this->get_logger(), "Wow Received Order:");
+        RCLCPP_INFO(this->get_logger(), "Receiving");
         RCLCPP_INFO(this->get_logger(), "Order ID: %ld", msg->order_id);
         RCLCPP_INFO(this->get_logger(), "Pizza Place: %s", msg->pizza_place.c_str());
         RCLCPP_INFO(this->get_logger(), "Pizza Type: %s", msg->pizza_type.c_str());
@@ -36,6 +36,8 @@ void PizzaBotController::order_callback(const pizza_bot_interfaces::msg::Order::
 
 void PizzaBotController::navigate_to_coord(pizza_bot_interfaces::msg::Order::SharedPtr ord)
 {
+    RCLCPP_INFO(this->get_logger(), "Navigating");
+
     int x = ord->pizza_place_coord.x;
     int y = ord->pizza_place_coord.y;
     auto request = std::make_shared<pizza_bot_interfaces::srv::NavigateToCoord::Request>();
@@ -63,6 +65,9 @@ void PizzaBotController::navigate_to_coord(pizza_bot_interfaces::msg::Order::Sha
 
 void PizzaBotController::deliver_pizza(pizza_bot_interfaces::msg::Order::SharedPtr ord)
 {
+
+    RCLCPP_INFO(this->get_logger(), "Delivering");
+
     auto request = std::make_shared<pizza_bot_interfaces::srv::DeliverPizza::Request>();
     std::string pizza;
     pizza = (std::string)ord->pizza_type;
