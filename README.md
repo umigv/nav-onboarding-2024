@@ -238,6 +238,43 @@ ros2 interface show pizza_bot_interfaces/srv/DeliverPizza
 
 Use the same code structure as you did when calling the "navigate_to_coord" service. This will be the final task for each order, so after delivering the pizza to the customer, simply wait for the next order to be published and repeat the sequence. After completing this step, the final infrastructure output should look like this: 
 
+
+
 <img src="https://github.com/umigv/nav-onboarding-2024/blob/main/images/Deliver%20pizza%20output.png" width="800">
 
 And that's it! After completing this onboarding project, you should have a solid understanding of the basic structure of a ROS application and the three primary methods nodes use to communicate with each other. When you're finished, let a lead know and we'll start talking about what project you might want to work on!
+
+
+## Common Errors:
+Q:
+"when I run the code ~/arv-ws/src/nav-onboarding-2024/pizza_bot cmd I get an error
+
+A:
+You need to download vs code for ubuntu IN YOUR VM (so click on the firefox logo in ubuntu and check out this link https://code.visualstudio.com/docs/setup/linux)
+
+
+Q:
+"Im running ros2 launch pizza_bot_infrastructure pizza_bot_infrastructure_launch.py and I get an error like "ros2 launch pizza_bot_infrastructure pizza_bot_infrastructure_launch.py"
+
+A:
+- In vs code go to : nav-onboarding-2024/pizza_bot_infrastructure/config/
+- rigtht click on the "orders.json" and click "copy path" (not copy relative path)
+- then open the file order_publisher_params.yaml
+     - which is also in nav-onboarding-2024/pizza_bot_infrastructure/config/
+- replace the parameter orders_path with what you just copied (keep the quotes though)
+- ctrl-s to save the file in vscode
+- in your workspace directory run colcon cuild
+- run source install/setup.bash
+- try again
+
+
+Q: 
+"I have a M1 and M2 macbook and I when I run the VM I get a black screen
+
+A:
+On the top bar click "Virtual Machine", then click "Restart" 
+
+
+
+
+
