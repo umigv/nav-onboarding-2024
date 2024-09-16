@@ -26,7 +26,11 @@ OrderPublisher::OrderPublisher()
         std::bind(&OrderPublisher::publish_order, this));
 
     // Open and parse orders json file only once
-    std::ifstream orders_file(get_parameter("orders_path").as_string());
+    std::string orders_path = get_parameter("orders_path").as_string();
+    RCLCPP_INFO(get_logger(),
+        "Retrieving orders from %s",
+        orders_path.c_str());
+    std::ifstream orders_file(orders_path);
     json orders_json = json::parse(orders_file);
     _orders = orders_json["orders"];
 }

@@ -16,11 +16,18 @@ def generate_launch_description():
         'navigator_params.yaml')
     restaurant_params = os.path.join(pizza_bot_infrastructure_config,
         'restaurant_params.yaml')
+    
+    orders_json = os.path.join(pizza_bot_infrastructure_config,
+        'orders.json')
 
     order_publisher_node = Node(package = 'pizza_bot_infrastructure',
         name = 'order_publisher_node',
         executable = 'order_publisher_node',
-        parameters = [order_publisher_params])
+        parameters = [
+            order_publisher_params,
+            {"orders_path": orders_json}
+        ]
+    )
 
     navigator_node = Node(package = 'pizza_bot_infrastructure',
         name = 'navigator_node',
