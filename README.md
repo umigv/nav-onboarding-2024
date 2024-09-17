@@ -257,6 +257,8 @@ Q:
 "Im running ros2 launch pizza_bot_infrastructure pizza_bot_infrastructure_launch.py and I get an error like "ros2 launch pizza_bot_infrastructure pizza_bot_infrastructure_launch.py"
 
 A:
+- If you haven't written any code, then just git pull and you should be good!
+- If you do have code written and don't want to lose it just do: 
 - In vs code go to : nav-onboarding-2024/pizza_bot_infrastructure/config/
 - rigtht click on the "orders.json" and click "copy path" (not copy relative path)
 - then open the file order_publisher_params.yaml
@@ -273,6 +275,12 @@ Q:
 
 A:
 On the top bar click "Virtual Machine", then click "Restart" 
+
+Q:
+"My VM doesn't even show me a black screen"
+
+A:
+Ask Maaz or John about Robostack! 
 
 
 
