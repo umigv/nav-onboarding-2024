@@ -12,7 +12,7 @@ PizzaBotController::PizzaBotController ()
     : Node("pizza_bot_controller")
 {
     subscription_ = this->create_subscription<pizza_bot_interfaces::msg::Order>(
-        "/orders", 10, std::bind(&PizzaBotController ::order_callback, this, std::placeholders::_1));
+        "/orders", 10, std::bind(&PizzaBotController::order_callback, this, std::placeholders::_1));
     publisher_ = this->create_publisher<pizza_bot_interfaces::msg::Order>(
         "received_orders", 10);
     client_ = this->create_client<pizza_bot_interfaces::srv::NavigateToCoord>("navigate_to_coord");
@@ -53,13 +53,16 @@ void PizzaBotController::navigate_to_coord(pizza_bot_interfaces::msg::Order::Sha
 	}
 
     const pizza_bot_interfaces::msg::Order::SharedPtr order = ord;
-  
-     client_->async_send_request(
+    std::function<void(rclcpp::Client<pizza_bot_interfaces::srv::NavigateToCoord>::SharedFuture)> cb = 
+    std::bind(&PizzaBotController::pizza_navigation_callback,
+            this,
+            std::placeholders::_1,
+            order) ;
+
+    client_->async_send_request(
         request,
-        [this, order](rclcpp::Client<pizza_bot_interfaces::srv::NavigateToCoord>::SharedFuture future) {
-            this->pizza_navigation_callback(future, order);
-        }
-    );
+        cb);
+            
   
 }
 
@@ -79,14 +82,32 @@ void PizzaBotController::deliver_pizza(pizza_bot_interfaces::msg::Order::SharedP
             "delivery_pizza service not available, waiting...");
 	}
 
-  
+    auto cb = std::bind(&PizzaBotController::delivery_bot_callback,
+            this,
+            std::placeholders::_1
+            );
+
 
     delivery_client_->async_send_request(
-        request
-      );
-            
+        request,
+        cb
+      );         
      
 }
+void PizzaBotController::delivery_bot_callback(rclcpp::Client<pizza_bot_interfaces::srv::DeliverPizza>::SharedFuture future){
+     bool navigation_succeeded = future.get()->success;
+    if (!navigation_succeeded)
+    {
+        RCLCPP_INFO(get_logger(),
+            "30 Min late, Delivery Bot Callback Failed");
+        return;
+    }
+    RCLCPP_INFO(get_logger(),
+            "Ding Dong, Delivery Bot Callback, Success");
+     
+
+}
+
 
 void PizzaBotController::pizza_navigation_callback(rclcpp::Client<pizza_bot_interfaces::srv::NavigateToCoord>::SharedFuture future,
 pizza_bot_interfaces::msg::Order::SharedPtr ord)
@@ -101,5 +122,6 @@ pizza_bot_interfaces::msg::Order::SharedPtr ord)
 
     RCLCPP_INFO(get_logger(),
         "Successfuly completed navigation");
+
     deliver_pizza(ord);
 }

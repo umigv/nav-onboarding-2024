@@ -16,7 +16,8 @@ private:
     void navigate_to_coord(pizza_bot_interfaces::msg::Order::SharedPtr ord);
     void deliver_pizza(pizza_bot_interfaces::msg::Order::SharedPtr);
     void pizza_navigation_callback(rclcpp::Client<pizza_bot_interfaces::srv::NavigateToCoord>::SharedFuture future,
-    pizza_bot_interfaces::msg::Order::SharedPtr ord);
+        pizza_bot_interfaces::msg::Order::SharedPtr ord);
+    void delivery_bot_callback(rclcpp::Client<pizza_bot_interfaces::srv::DeliverPizza>::SharedFuture future);
     rclcpp::Subscription<pizza_bot_interfaces::msg::Order>::SharedPtr subscription_;
     rclcpp::Publisher<pizza_bot_interfaces::msg::Order>::SharedPtr publisher_;
     rclcpp::Client<pizza_bot_interfaces::srv::NavigateToCoord>::SharedPtr client_;
