@@ -13,45 +13,21 @@ PizzaBotController::PizzaBotController ()
 {
     subscription_ = this->create_subscription<pizza_bot_interfaces::msg::Order>(
         "/orders", 10, std::bind(&PizzaBotController::order_callback, this, std::placeholders::_1));
-    publisher_ = this->create_publisher<pizza_bot_interfaces::msg::Order>(
-        "received_orders", 10);
+    publisher_ = CREATE A PUBLISHER
     client_ = this->create_client<pizza_bot_interfaces::srv::NavigateToCoord>("navigate_to_coord");
-    delivery_client_ = this->create_client<pizza_bot_interfaces::srv::DeliverPizza>("deliver_pizza");
+    delivery_client_ = CREATE A CLIENT;
 }
 
 void PizzaBotController::order_callback(const pizza_bot_interfaces::msg::Order::SharedPtr msg)
 {
-        RCLCPP_INFO(this->get_logger(), "Receiving");
-        RCLCPP_INFO(this->get_logger(), "Order ID: %ld", msg->order_id);
-        RCLCPP_INFO(this->get_logger(), "Pizza Place: %s", msg->pizza_place.c_str());
-        RCLCPP_INFO(this->get_logger(), "Pizza Type: %s", msg->pizza_type.c_str());
-        RCLCPP_INFO(this->get_logger(), "Pizza Place Coordinates: (%ld, %ld)", msg->pizza_place_coord.x, msg->pizza_place_coord.y);
-        RCLCPP_INFO(this->get_logger(), "Customer Coordinates: (%ld, %ld)", msg->customer_coord.x, msg->customer_coord.y);
-        
-        publisher_->publish(*msg);
-    // Call the NavigateToCoord service with the order's x and y coordinates
-        navigate_to_coord(msg);
-    
+       PUBLISH THE MSG TO THE RECIEVED_ORDER TOPIC ANDD CALL THE NAVIGATE FUNCTION
 }
 
 void PizzaBotController::navigate_to_coord(pizza_bot_interfaces::msg::Order::SharedPtr ord)
 {
-    RCLCPP_INFO(this->get_logger(), "Navigating");
-
-    int x = ord->pizza_place_coord.x;
-    int y = ord->pizza_place_coord.y;
+   
     auto request = std::make_shared<pizza_bot_interfaces::srv::NavigateToCoord::Request>();
-    pizza_bot_interfaces::msg::Coord gps;
-    gps.x = x;
-    gps.y = y;
-    request->goal = gps;
-    std::chrono::seconds duration(2);
-    while (!client_->wait_for_service(duration)) 
-	{
-	    RCLCPP_INFO(get_logger(), 
-            "navigate_to_coord service not available, waiting...");
-	}
-
+    PUT THE RIGHT DATA INTO REQUEST
     const pizza_bot_interfaces::msg::Order::SharedPtr order = ord;
     std::function<void(rclcpp::Client<pizza_bot_interfaces::srv::NavigateToCoord>::SharedFuture)> cb = 
     std::bind(&PizzaBotController::pizza_navigation_callback,
@@ -69,42 +45,11 @@ void PizzaBotController::navigate_to_coord(pizza_bot_interfaces::msg::Order::Sha
 void PizzaBotController::deliver_pizza(pizza_bot_interfaces::msg::Order::SharedPtr ord)
 {
 
-    RCLCPP_INFO(this->get_logger(), "Delivering Pizza");
-
-    auto request = std::make_shared<pizza_bot_interfaces::srv::DeliverPizza::Request>();
-    std::string pizza;
-    pizza = (std::string)ord->pizza_type;
-    request->pizza_type = pizza;
-    std::chrono::seconds duration(1);
-    while (!client_->wait_for_service(duration)) 
-	{
-	    RCLCPP_INFO(get_logger(), 
-            "delivery_pizza service not available, waiting...");
-	}
-
-    auto cb = std::bind(&PizzaBotController::delivery_bot_callback,
-            this,
-            std::placeholders::_1
-            );
-
-
-    delivery_client_->async_send_request(
-        request,
-        cb
-      );         
+   SEND THE ASYNC REQUEST 
      
 }
-void PizzaBotController::delivery_bot_callback(rclcpp::Client<pizza_bot_interfaces::srv::DeliverPizza>::SharedFuture future){
-     bool navigation_succeeded = future.get()->success;
-    if (!navigation_succeeded)
-    {
-        RCLCPP_INFO(get_logger(),
-            "30 Min late, Delivery Bot Callback Failed");
-        return;
-    }
-    RCLCPP_INFO(get_logger(),
-            "Ding Dong, Delivery Bot Callback, Success");
-     
+void PizzaBotController::delivery_bot_callback(FILL OUT){
+     DONT NEED THIS FOR THIS PROJECT< YOU CAN JUST PRINT SOMETHING HERE
 
 }
 
@@ -112,16 +57,5 @@ void PizzaBotController::delivery_bot_callback(rclcpp::Client<pizza_bot_interfac
 void PizzaBotController::pizza_navigation_callback(rclcpp::Client<pizza_bot_interfaces::srv::NavigateToCoord>::SharedFuture future,
 pizza_bot_interfaces::msg::Order::SharedPtr ord)
 {
-    bool navigation_succeeded = future.get()->success;
-    if (!navigation_succeeded)
-    {
-        RCLCPP_INFO(get_logger(),
-            "Failed to complete navigation");
-        return;
-    }
-
-    RCLCPP_INFO(get_logger(),
-        "Successfuly completed navigation");
-
-    deliver_pizza(ord);
+    CALL THE DELIVER FUNCTION
 }
