@@ -95,6 +95,7 @@ Now we need to make sure that the infrastructure is working properly. Open anoth
 source ~/arv-ws/install/setup.bash
 # If you're already in the arv-ws directory, you can simply run:
 source install/setup.bash
+# If you are in a zsh terminal, replace setup.bash with setup.zsh
 ```
 
 **_If you forget to do this, you will not be able to run any of the code in your src directory. Any time you are getting a weird error that you don't understand, this is the first thing to try._**
